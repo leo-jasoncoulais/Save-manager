@@ -30,8 +30,8 @@ class GoogleClient:
 
     def init(self):
 
-        if os.path.exists("token.json"):
-            self.creds = Credentials.from_authorized_user_file("token.json", self.scopes)
+        if os.path.exists("tokens/google.json"):
+            self.creds = Credentials.from_authorized_user_file("tokens/google.json", self.scopes)
 
         # If there are no (valid) credentials available, let the user log in.
         if not self.creds or not self.creds.valid:
@@ -39,11 +39,11 @@ class GoogleClient:
             if self.creds and self.creds.expired and self.creds.refresh_token:
                 self.creds.refresh(Request())
             else:
-                flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self.scopes)
+                flow = InstalledAppFlow.from_client_secrets_file("keys/google.json", self.scopes)
                 self.creds = flow.run_local_server(port=0)                
 
         # Save the credentials for the next run
-        with open("token.json", "w") as token:
+        with open("tokens/google.json", "w") as token:
             token.write(self.creds.to_json())
 
     def get_service(self, name: str, version: str):
